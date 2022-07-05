@@ -1,4 +1,4 @@
-local listcmds = {
+listcmds = {
     [1] = print("---------------- VERSION 7 ----------------"),
     [2] = warn("Made the cmds overall better :D"),
     [3] = warn("Added a better version of /mess !"),
