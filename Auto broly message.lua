@@ -1,4 +1,4 @@
-_G.LostName = "Lost "
+_G.LostName = " Lost 6123 "
 _G.NiceMessage= "Love the weather today!"
 
 local args = {
