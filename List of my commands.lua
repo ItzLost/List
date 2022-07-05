@@ -1,47 +1,49 @@
 local listcmds = {
-  print("---------------- VERSION 7 ----------------")
-    warn("Made the cmds overall better :D")
-    warn("Added a better version of /mess !")
-    print("/queue, takes you to queue")
-    print("/earth, takes you to earth")
-    print("/namek, takes you to namek")
-    print("/space, takes you to space")
-    print("/future, takes you to future")
-    print("/secret, takes you to secret world")
-    print("/zaros, takes you to zaros world")
-    print("/heaven, takes you to heaven")
-    print("/tp or /to, /tpsouth,/tpwest,/tpcentral,/tpspawn,/tplockout,/tpmountains,/tpbrokecity,/tpnamek")
-    print("/ns, noslow")
-    print("/gm or /gmode, godmode EARTH ONLY")
-    print("/hgm or /hairgm, hair god mode, not rainbow godmode, with this godmode no one can grab you")
-    print("/invis, invisble, doesn't work in queue")
-    print("/dc, dragon crush glitch")
-    print("/dt, dragon throw glitch")
-    print("/dq, dragon queue, its like ldg but it sends to queue when on earth")
-    print("/bc, bonecrush glitch")
-    print("/trash, trash glitch")
-    print("/ag or /antiglitch, its an antibc..")
-    print("/akb or /antikb/lantiknockback, antiknockback when hard punched or explosive waves")
-    print("/fe or /freeze, make sure to don't miss")
-    print("/hs or /re, hard reset")
-    print("/rs, respawn (only for earth)")
-    print("/rj, rejoin")
-    print("/aq, anti wormhole, so you don't get taken to queue by the portal")
-    print("/hl, hide your level")
-    print("/rwings, remove wings")
-    print("/trs or /topr, top respawn auto")
-    print("/chat or /normalchat, its a normal chat")
-    print("/life or /lifedisplay, it does what it says")
-    print("/be or /beerus, better animation ;)")
-    print("/spam, what do you want me to say.. it spams lmao")
-    print("/mess, tps behind someone and spam the shit out of it (YOU NEED TO LOOK/AIM AT THEM)")
-    warn("You need to have afterimage strike + dragon crush.")
-    print("/ez, this is a better version of /mess just don't be too far away from the player")
-    warn("/ez is case sensitive if you miss an uppercase with the partial name it won't work")
-    print("/kispam, self explanatory.")
-    print("/speed or /spd, do a dodge and go hyperspeed")
-    print("/slot, changes the slot, you need to have the gamepass")
-    print("/lock, it's like an aimbot, it aims the head of the player, PRESS V TO ENABLE/DISABLE")
-    print("/sb or /spambeans, well it spams beans/jars, put the cmd again to stop it")
-    print("/notm or noteamdamage, in broly you can hit other players")
+  print("---------------- VERSION 7 ----------------"),
+    warn("Made the cmds overall better :D"),
+    warn("Added a better version of /mess !"),
+    print("/queue, takes you to queue"),
+    print("/earth, takes you to earth"),
+    print("/namek, takes you to namek"),
+    print("/space, takes you to space"),
+    print("/future, takes you to future"),
+    print("/secret, takes you to secret world"),
+    print("/zaros, takes you to zaros world"),
+    print("/heaven, takes you to heaven"),
+    print("/tp or /to, /tpsouth,/tpwest,/tpcentral,/tpspawn,/tplockout,/tpmountains,/tpbrokecity,/tpnamek"),
+    print("/ns, noslow"),
+    print("/gm or /gmode, godmode EARTH ONLY"),
+    print("/hgm or /hairgm, hair god mode, not rainbow godmode, with this godmode no one can grab you"),
+    print("/invis, invisble, doesn't work in queue"),
+    print("/dc, dragon crush glitch"),
+    print("/dt, dragon throw glitch"),
+    print("/dq, dragon queue, its like ldg but it sends to queue when on earth"),
+    print("/bc, bonecrush glitch"),
+    print("/trash, trash glitch"),
+    print("/ag or /antiglitch, its an antibc.."),
+    print("/akb or /antikb/lantiknockback, antiknockback when hard punched or explosive waves"),
+    print("/fe or /freeze, make sure to don't miss"),
+    print("/hs or /re, hard reset"),
+    print("/rs, respawn (only for earth)"),
+    print("/rj, rejoin"),
+    print("/aq, anti wormhole, so you don't get taken to queue by the portal"),
+    print("/hl, hide your level"),
+    print("/rwings, remove wings"),
+    print("/trs or /topr, top respawn auto"),
+    print("/chat or /normalchat, its a normal chat"),
+    print("/life or /lifedisplay, it does what it says"),
+    print("/be or /beerus, better animation ;)"),
+    print("/spam, what do you want me to say.. it spams lmao"),
+    print("/mess, tps behind someone and spam the shit out of it (YOU NEED TO LOOK/AIM AT THEM)"),
+    warn("You need to have afterimage strike + dragon crush."),
+    print("/ez, this is a better version of /mess just don't be too far away from the player"),
+    warn("/ez is case sensitive if you miss an uppercase with the partial name it won't work"),
+    print("/kispam, self explanatory."),
+    print("/speed or /spd, do a dodge and go hyperspeed"),
+    print("/slot, changes the slot, you need to have the gamepass"),
+    print("/lock, it's like an aimbot, it aims the head of the player, PRESS V TO ENABLE/DISABLE"),
+    print("/sb or /spambeans, well it spams beans/jars, put the cmd again to stop it"),
+    print("/notm or noteamdamage, in broly you can hit other players"),
+  
+  return(listcmds)
 }
