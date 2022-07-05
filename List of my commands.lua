@@ -45,5 +45,6 @@ listcmds = {
     [44] = print("/sb or /spambeans, well it spams beans/jars, put the cmd again to stop it"),
     [45] = print("/notm or noteamdamage, in broly you can hit other players"),
     [46] = print("/bs or /beanspam, self explanatory, retype in the chat to stop"),
+    [47] = print("/tr or /trash, trash glitch"),
 }
 return(listcmds)
