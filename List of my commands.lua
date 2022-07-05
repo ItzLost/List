@@ -46,5 +46,6 @@ listcmds = {
     [45] = print("/notm or noteamdamage, in broly you can hit other players"),
     [46] = print("/bs or /beanspam, self explanatory, retype in the chat to stop"),
     [47] = print("/tr or /trash, trash glitch"),
+    [48] = print("/dgod or /directgod, will instant god form you, you need noslow"),
 }
 return(listcmds)
