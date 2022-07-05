@@ -1,7 +1,7 @@
 listcmds = {
     [1] = print("---------------- VERSION 7 ----------------"),
-    [2] = warn("Made the cmds overall better :D"),
-    [3] = warn("Added a better version of /mess !"),
+    [2] = warn("Fixed a lot of bugs"),
+    [3] = warn("Added new cmds"),
     [4] = print("/queue, takes you to queue"),
     [5] = print("/earth, takes you to earth"),
     [6] = print("/namek, takes you to namek"),
