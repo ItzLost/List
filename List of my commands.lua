@@ -43,6 +43,7 @@ listcmds = {
     [42] = print("/slot, changes the slot, you need to have the gamepass"),
     [43] = print("/lock, it's like an aimbot, it aims the head of the player, PRESS V TO ENABLE/DISABLE"),
     [44] = print("/sb or /spambeans, well it spams beans/jars, put the cmd again to stop it"),
-    [45] = print("/notm or noteamdamage, in broly you can hit other players"), 
+    [45] = print("/notm or noteamdamage, in broly you can hit other players"),
+    [46] = print("/bs or /beanspam, self explanatory, retype in the chat to stop"),
 }
 return(listcmds)
