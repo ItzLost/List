@@ -44,4 +44,5 @@ local listcmds = {
     print("/lock, it's like an aimbot, it aims the head of the player, PRESS V TO ENABLE/DISABLE")
     print("/sb or /spambeans, well it spams beans/jars, put the cmd again to stop it")
     print("/notm or noteamdamage, in broly you can hit other players")
+  return(listcmds)
 }
