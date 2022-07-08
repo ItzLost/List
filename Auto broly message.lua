@@ -1,5 +1,5 @@
 _G.LostName = " Lost 4000"
-_G.NiceMessage= "Finally fixed xD"
+_G.NiceMessage= "ez broly"
 
 local args = {
   [1] = _G.LostName,
