@@ -49,6 +49,7 @@ listcmds = {
     [33] = print("/lag, Self explanatory."),
     [49] = print("/fly, If you can use it ask the owner how to use it."),
     [50] = print("/antig or /antigrab, Self explanatory."),
+    [51] = print("/anchor, TRUE/FALSE, anchors you"),
     [666] = warn("When a command is followed by true/false then re type the command to stop it"),
 }
 return(listcmds)
