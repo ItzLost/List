@@ -3,5 +3,7 @@ local userids1 = {
   [3540937908] = true,
   [65600305] = true,
   [561651896] = true,
+  [2219328540] = true,
+  [2879501093] = true,
 }
 return(userids1)
