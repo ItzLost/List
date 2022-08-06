@@ -1,7 +1,7 @@
 listcmds = {
-    [1] = print("---------------- VERSION 8 ----------------"),
-    [2] = warn("Fixed a lot of bugs"),
-    [3] = warn("Added new cmds"),
+    [1] = print("---------------- VERSION 9 ----------------"),
+    [2] = warn("Added /weirdbug, /status, /expfreeze."),
+    [3] = warn("Made so the cmds can only be said at the start of the chat."),
     [4] = print("/queue, takes you to queue"),
     [5] = print("/earth, takes you to earth"),
     [6] = print("/namek, takes you to namek"),
@@ -47,9 +47,12 @@ listcmds = {
     [47] = print("/dgod or /directgod, will instant god form you, you need noslow"),
     [48] = print("/iy or /infiniteyield, will execute infinite yield hub"),
     [33] = print("/lag, Self explanatory."),
-    [49] = print("/fly, If you can use it ask the owner how to use it."),
+    [49] = print("/fly [plr], If you can use it ask the owner how to use it."),
     [50] = print("/antig or /antigrab, Self explanatory."),
     [51] = print("/anchor, TRUE/FALSE, anchors you"),
+    [52] = print("/weirdglitch or /wg, it's explained in the notifcations (way to hard to explain)"),
+    [53] = print("/expfreeze, double exp freeze"),
+    [54] = print("/status, see the status of noslow, gm, anchor, beanspam, press F9 to see it"),
     [666] = warn("When a command is followed by true/false then re type the command to stop it"),
 }
 return(listcmds)
