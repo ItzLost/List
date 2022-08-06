@@ -8,5 +8,6 @@ local userids1 = {
   [376140421] = true,
   [3111149453] = true,
   [3370775393] = true,
+  [1797916318] = true,
 }
 return(userids1)
