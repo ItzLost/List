@@ -59,7 +59,7 @@ listcmds = {
     [59] = print("/goto [plr], it'll tween to this player"),
     [60] = print("/gotonpc [npc], same for /goto [plr] but for npcs"),
     [61] = print("/bring [plr], will bring this player, NEED DRAGON CRUSH"),
-    [62] = print("Stealthmode, self explanatory"),
+    [62] = print("/stealthmode, self explanatory"),
     [666] = warn("When a command is followed by true/false then re type the command to stop it"),
 }
 return(listcmds)
