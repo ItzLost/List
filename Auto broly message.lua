@@ -1,5 +1,5 @@
-local LostName = "ds: itslxst"
-local NiceMessage = "yessir"
+local LostName = 'ds: itslxst'
+local NiceMessage = 'yessir'
 
 game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer('This Auto was made by Lost.', 'All')
 task.wait(2)
