@@ -1,14 +1,8 @@
-_G.LostName = " Lost 4000"
-_G.NiceMessage= "W R1"
+local LostName = "ds: itslxst"
+local NiceMessage = "yessir"
 
-local args = {
-  [1] = _G.LostName,
-  [2] = "All"
-}
-game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(args))
-wait(2)
-local args = {
-  [1] = _G.NiceMessage,
-  [2] = "All"
-}
-game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(unpack(args))
+game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer('This Auto was made by Lost.', 'All')
+task.wait(2)
+game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(lostName, 'All')
+task.wait(2)
+game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(niceMessage, 'All')
