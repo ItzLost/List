@@ -531,7 +531,7 @@ addNewCommand('Freeze', {'Fr'}, 'Freezes the double exp timer, form level 150 ne
     serverTraits.Transform:FireServer('g')
     task.wait(.5)
     serverTraits.Input:FireServer({[1] = 'xoff'}, CFrame.new(0, 0, 0), InputObject)
-    task.wait(.6)
+    task.wait(tonumber(Args) or .5)
     local tool =  plr.Backpack['Flash Strike']
 
     tool.Parent = char
@@ -572,6 +572,11 @@ local conn = plr.Chatted:Connect(function(Message)
 end)
 
 fcts.Notif('Type "' .. Prefix .. 'Cmds" to see the list of commands')
+
+if queueteleport then
+    queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ItzLost/List/main/idk'))()")
+end
+
 repeat
     task.wait()
 until exit
