@@ -2,7 +2,6 @@ local Prefix = '*'
 local Version = 'In-Dev n°1'
 
 
-queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ItzLost/List/main/idk'))()")
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
