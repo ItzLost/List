@@ -1,0 +1,13 @@
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local plr = game:GetService('Players').LocalPlayer
+
+game:GetService('RunService').RenderStepped:Connect(function()
+    if not plr.Character then return end
+
+    if plr.Character:FindFirstChild('True') then
+        plr.Character.True:Destroy()
+    end
+end)
