@@ -1,13 +1,579 @@
+local Prefix = '*'
+local Version = 'In-Dev n°1'
+
+
+queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ItzLost/List/main/idk'))()")
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
 
-local plr = game:GetService('Players').LocalPlayer
+local players = game:GetService('Players')
+local RunService = game:GetService('RunService')
+local plr = players.LocalPlayer
+local exit: boolean
 
-game:GetService('RunService').RenderStepped:Connect(function()
-    if not plr.Character then return end
+local fcts = {
+    Notif = function(Text: string, Time: number?): ()
+        local Notification = loadstring(game:HttpGet('https://api.irisapp.ca/Scripts/IrisBetterNotifications.lua'))()
+        getgenv().IrisAd = true
 
-    if plr.Character:FindFirstChild('True') then
-        plr.Character.True:Destroy()
+        Notification.Notify(
+            'Lost Commands!', Text or '', 'http://www.roblox.com/asset/?id=11200561129',
+            {
+                Duration = Time or 7,
+                GradientSettings = {GradientEnabled = false, Retract = true, SolidColor = Color3.fromRGB(150, 0, 0)},
+                Main = {BackgroundColor3 = Color3.fromRGB(15, 0, 0)}
+            }
+        )
+
+        return false
+    end,
+
+    Rejoin = function(): ()
+        game:GetService('TeleportService'):Teleport(game.PlaceId)
+    end,
+
+    Distance = function(v1: Vector3, v2: Vector3): number
+        return (v1 - v2).Magnitude
+    end,
+
+    Tween = function(obj, time: number, coords: CFrame, ...: string?): ()
+        local style = ... and Enum.EasingStyle[...] or Enum.EasingStyle.Linear
+
+        game:GetService('TweenService'):Create(obj, TweenInfo.new(time, style, Enum.EasingDirection.Out), {CFrame = coords}):Play()
+    end,
+
+    getPlayer = function(PartialName: string): Player?
+        if not PartialName then return end
+        local lower = PartialName:lower()
+
+        for _, player in next, players:GetPlayers() do
+            if player.Name:sub(1, #PartialName):lower() == lower or player.DisplayName:sub(1, #PartialName):lower() == lower then
+                return player
+            end
+        end
+
+        return nil
+    end,
+
+    getNpc = function(PartialName: string): Model?
+        local lower = PartialName:lower()
+
+        for _, npc in next, workspace.Live:GetChildren() do
+            if npc.Name:sub(1, #PartialName):lower() == lower then
+                if not npc:FindFirstChild('PowerOutput') then
+                    return npc
+                end
+            end
+        end
+
+        return nil
+    end,
+
+    isCharacterLoaded = function(player: Player?): (Model, Part, Humanoid)
+        local char = player and player.Character or plr.Character
+
+        if char then
+            if char:FindFirstChild('HumanoidRootPart') and char:FindFirstChild('Humanoid') and char:FindFirstChild('Block') then
+                return char, char.HumanoidRootPart, char.Humanoid
+            end
+        end
+
+        return false
+    end,
+}
+
+-- Variables --
+local gui = plr:WaitForChild('PlayerGui')
+
+local jarSpam, Follow, Red, Godmode
+
+local Dimensions = {
+    Earth = 536102540,
+    Queue = 3565304751,
+    Namek = 882399924,
+    Space = 478132461,
+    Future = 569994010,
+    Secret = 2046990924,
+    Zaros = 2651456105,
+    Heaven = 3552157537
+}
+
+
+local Commands = {}:: {
+    [string]: {
+        Aliases: {string},
+        Description: string,
+        Func: (Args: string?) -> (),
+    }
+}
+-- functions --
+local function addNewCommand(Name: string, Alias: {string}, Desc: string, Callback: (Args: string?) -> ())
+    Commands[Name] = {
+        Aliases = Alias,
+        Description = Desc,
+        Func = Callback,
+    }
+    task.wait()
+end
+
+local function checkDim(Dim: string | {string}): boolean
+    if type(Dim) == 'table' then
+        for _, allowedDim in Dim do
+            if game.PlaceId == Dimensions[allowedDim] then
+                return true
+            end
+        end
+
+        local dimList = ''
+        for i, v in Dim do
+            dimList = dimList .. v  .. ', '
+        end
+
+        return fcts.Notif('Wrong dimension! Command can only be used on: ' .. dimList .. '.')
+    else
+        if game.PlaceId ~= Dimensions[Dim] then
+            return fcts.Notif('Wrong dimension! Command can only be used on: ' .. Dim .. '.')
+        end
+        return true
+    end
+end
+
+local function Goto(Location: CFrame): ()
+    local char, hrp, _ = fcts.isCharacterLoaded()
+
+    if char and hrp then
+        local t = fcts.Distance(hrp.Position, Location.Position)/5000
+
+        fcts.Tween(hrp, t, Location)
+    else
+        fcts.Notif("Player's character missing.")
+    end
+end
+
+local function goBackToPlace(func: () -> (), Player: Player?): ()
+    local char, hrp, _ = fcts.isCharacterLoaded()
+    local oldPosition
+
+    if char and hrp then
+        oldPosition = hrp.CFrame
+    end
+
+    func()
+
+    repeat task.wait()
+        local targetChar, targetHrp
+        if Player then
+            targetChar, targetHrp, _ = fcts.isCharacterLoaded(Player)
+        end
+        char, hrp, _ = fcts.isCharacterLoaded()
+
+        if char and hrp then
+            hrp.CFrame = targetChar and targetHrp and targetHrp.CFrame or oldPosition
+        end
+    until char and char:FindFirstChild('Block') and gui:FindFirstChild('HUD')
+end
+
+local function speedChat(args: {[number]: string}, text: string, waitTime: number?): ()
+    local serverTraits: Folder = plr.Backpack.ServerTraits
+    local chatA: RemoteEvent = serverTraits.ChatAdvance
+    local chatLabel: TextLabel = gui.HUD.Bottom.ChatGui.TextLabel
+
+    repeat
+        chatA:FireServer(args)
+        task.wait(waitTime)
+    until not gui:FindFirstChild('HUD') or not chatLabel.Parent.Visible or chatLabel.Text == text
+end
+
+local function Respawn(): ()
+    local serverTraits: Folder = plr.Backpack.ServerTraits
+    local chatS: RemoteEvent = serverTraits.ChatStart
+
+    repeat task.wait()
+        pcall(function()
+            chatS:FireServer(workspace.FriendlyNPCs:FindFirstChild('Hair Stylist'))
+            speedChat({[1] = 'Yes'}, 'Alright', .25)
+            plr.Backpack.HairScript.RemoteEvent:FireServer('woah')
+        end)
+    until not gui:FindFirstChild('HUD')
+end
+
+local function loopGoto(Args: string, Red: boolean?): ()
+    local target = fcts.getPlayer(Args)
+    local char,  hrp, _ = fcts.isCharacterLoaded()
+
+    if not target then return fcts.Notif('Target not found!') end
+    if not char or not hrp then return fcts.Notif('Character not found/Not loaded!') end
+
+    local targetChar, targetHrp, _ = fcts.isCharacterLoaded(target)
+    if not targetChar or not targetHrp then return fcts.Notif('Target character not found/Not loaded!') end
+
+    local Dist = fcts.Distance(hrp.Position, targetHrp.Position)
+
+    if not Red and Dist > 500 then
+        repeat task.wait()
+            fcts.Tween(hrp, Dist/5000, targetHrp.CFrame)
+
+            task.wait(Dist/5000 + .25)
+        until Dist > 500
+    else
+        hrp.CFrame = targetHrp.CFrame * CFrame.new(0, 0, 3)
+        if Red then
+            repeat task.wait()
+                Dist = fcts.Distance(hrp.Position, targetHrp.Position)
+                hrp.CFrame = targetHrp.CFrame * CFrame.new(0, 0, 3)
+            until Dist < 20
+
+            task.wait(.1)
+
+            plr.Backpack.ServerTraits.EatSenzu:FireServer('')
+
+            Respawn()
+            repeat
+                task.wait()
+            until fcts.isCharacterLoaded()
+        end
+    end
+end
+
+
+
+-- Adding commands --
+addNewCommand('CommandList', {'Cmds', 'Cmd', 'CmdsList', 'Help'}, 'Prints the list of all the usable commands.', function(Args)
+    print('-------------------- VERSION ' .. Version .. '--------------------')
+    for cmd, v in Commands do
+
+        local showAlias = ''
+        for i = 1, #v.Aliases do
+            showAlias = showAlias .. '/' .. v.Aliases[i]
+        end
+
+        print(Prefix .. cmd .. showAlias .. ': ' .. v.Description)
+    end
+    print('------------------------------------------------------------')
+
+    fcts.Notif('Press F9 and scroll down to see the list of commands!')
+end)
+
+addNewCommand('Exit', {'Close', 'Stop'}, 'Stops the script.', function(Args)
+    exit = true
+end)
+
+addNewCommand('InfiniteYield', {'InfYield', 'Iy', 'InfiniteYieldHub'}, 'Executes Infinite Yield Hub.', function(Args)
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'), true))()
+    fcts.Notif('Infinite Yield Hub executed!')
+end)
+
+addNewCommand('Teleport', {'Tp'}, 'Teleports you to Earth/Queue/Namek/Space/Future/Secret/Zaros/Heaven.', function(Args)
+    for dim, id in Dimensions do
+        if Args:lower():find(dim:lower()) then
+            return game:GetService('TeleportService'):Teleport(id)
+        end
+    end
+
+    fcts.Notif('Wrong arguments.')
+end)
+
+addNewCommand('Rejoin', {'Rj'}, 'Rejoins the server you are in.', function(Args)
+    if #players:GetChildren() <= 1 then
+        plr:Kick('Rejoining')
+        task.wait(.1)
+    end
+    fcts.Rejoin()
+end)
+
+addNewCommand('HardReset', {'Hr', 'Reset'}, 'Hard resets your character.', function(Args)
+    local char = plr.Character
+
+    if char then
+        char:BreakJoints()
+        fcts.Notif('Hard reseted!')
+    else
+        fcts.Notif('No character found')
     end
 end)
+
+addNewCommand('Respawn', {'Rsp'}, 'Respawns the character faster on earth.', function(Args)
+    if not checkDim('Earth') then
+        goBackToPlace(function()
+            plr.Character:BreakJoints()
+        end)
+    end
+
+    fcts.Notif('Respawning..')
+
+    goBackToPlace(Respawn, fcts.getPlayer(Args))
+    fcts.Notif('Respawned!')
+end)
+
+addNewCommand('NormalChat', {'Chatspy', 'Cs'}, 'Makes the chat like in a normal Roblox game.', function(Args)
+    gui.Chat.Frame.ChatChannelParentFrame.Visible = true
+    gui.Chat.Frame.ChatBarParentFrame.Position = UDim2.new(0, 0, 1, -44)
+
+    fcts.Notif('Normal chat enabled, you can now read the chat.')
+end)
+
+addNewCommand('GoToPlayer', {'Goto'}, 'Will teleport you to the said player used like: ' .. Prefix .. 'GoToPlayer [PartialName].', function(Args)
+    local target = fcts.getPlayer(Args)
+
+    if target then
+        local char, hrp, _ = fcts.isCharacterLoaded(target)
+        if char and hrp then
+            Goto(hrp.CFrame)
+        else
+            fcts.Notif("Target's character not found!")
+        end
+    else
+        fcts.Notif('Target not found!')
+    end
+end)
+
+addNewCommand('GoToNpc', {}, 'Will teleport you to the said npc used like: ' .. Prefix .. 'GoToNpc [PartialName].', function(Args)
+    local target = fcts.getNpc(Args)
+
+    if target then
+        local hrp = target.HumanoidRootPart
+        if target and hrp then
+            Goto(hrp.CFrame)
+        else
+            fcts.Notif("Target's character not found!")
+        end
+    else
+        fcts.Notif('Target not found!')
+    end
+end)
+
+addNewCommand('Slot', {}, 'Will change slot for you used like: ' .. Prefix .. 'Slot [Number]. Number is optional.', function(Args)
+    if not checkDim('Earth') then return end
+
+    fcts.Notif('Changing slots..')
+
+    local serverTraits: Folder = plr.Backpack.ServerTraits
+    local chatS: RemoteEvent = serverTraits.ChatStart
+
+
+    chatS:FireServer(workspace.FriendlyNPCs:FindFirstChild('Character Slot Changer'))
+
+    task.wait(.5)
+    speedChat({[1] = 'Yes'}, 'Alright', .2)
+    speedChat({[1] = 'k'}, 'Which slot would you like to play in?', .2)
+
+    if Args then
+        goBackToPlace(function()
+            local Number = Args:match('%d')
+            local Slot = 'Slot' .. Number
+
+            speedChat({[1] = Slot}, 'Loading!', .2)
+
+            task.wait(2)
+        end)
+        fcts.Notif('Changed to Slot ' .. Args:match('%d') .. '!')
+    end
+end)
+
+addNewCommand('JarSpam', {'BeanSpam'}, 'Will spam jars/beans.', function(Args)
+    fcts.Notif('Spamming jars!')
+    jarSpam = true
+
+    while jarSpam do task.wait()
+        plr.Backpack.ServerTraits.EatSenzu:FireServer('')
+    end
+end)
+addNewCommand('UnSpamJar', {'UnSpamBean'}, 'Will stop spamming jars/beans.', function(Args)
+    fcts.Notif('Stopped spamming jars!')
+    jarSpam = false
+end)
+
+addNewCommand('Follow', {'SpamTp'}, 'Will teleport continuously to the said player. Used like: ' .. Prefix .. 'Follow [PartialName].', function(Args)
+    if fcts.getPlayer(Args) then
+        fcts.Notif('Following: ' .. fcts.getPlayer(Args).Name)
+    end
+    Follow = true
+
+    while Follow do task.wait()
+        loopGoto(Args)
+    end
+end)
+addNewCommand('UnFollow', {'UnSpamTp'}, 'Will stop teleporting continuously.', function(Args)
+    fcts.Notif('Stopped following!')
+    Follow = false
+end)
+
+addNewCommand('Red', {}, 'Will follow the said player and use a bean at the appropriate moment. Used like: ' .. Prefix .. 'Red [PartialName].', function(Args)
+    if fcts.getPlayer(Args) then
+        fcts.Notif('Redding: ' .. fcts.getPlayer(Args).Name)
+    end
+    Red = true
+
+    while Red do task.wait()
+        loopGoto(Args, true)
+    end
+end)
+addNewCommand('UnRed', {}, 'Will stop following the said player.', function(Args)
+    fcts.Notif('Stopped redding!')
+    Red = false
+end)
+
+addNewCommand('Anchor', {}, 'Anchors the player in place.', function(Args)
+    local char, hrp, _ = fcts.isCharacterLoaded()
+
+    if not char or not hrp then return fcts.Notif('Character not found/Not loaded!') end
+
+    hrp.Anchored = true
+    fcts.Notif('Anchored!')
+end)
+addNewCommand('UnAnchor', {}, 'UnAnchors the player.', function(Args)
+    local char, hrp, _ = fcts.isCharacterLoaded()
+
+    if not char or not hrp then return fcts.Notif('Character not found/Not loaded!') end
+
+    hrp.Anchored = false
+    fcts.Notif('UnAnchored!')
+end)
+
+addNewCommand('Glitch', {'Bug'}, 'Will glitch the said user. Used like: ' .. Prefix .. 'Glitch [PartialName].', function(Args)
+    if game.PlaceId == Dimensions.Queue then return fcts.Notif('Cannot use moves inside of Queue World!') end
+
+    local target = fcts.getPlayer(Args)
+
+    if target then
+        fcts.Notif('Trying to glitch: ' .. target.Name)
+        local targetChar, targetHrp, _ = fcts.isCharacterLoaded(target)
+        local char, hrp, _ = fcts.isCharacterLoaded()
+
+        if targetChar and targetHrp then
+            if char and hrp then
+                Goto(targetHrp.CFrame * CFrame.new(0, 0, 3))
+
+                local Dist = fcts.Distance(hrp.Position, targetHrp.Position)
+
+                if Dist > 5 then
+                    repeat task.wait(Dist/5000)
+                        Dist = fcts.Distance(hrp.Position, targetHrp.Position)
+
+                        Goto(targetHrp.CFrame * CFrame.new(0, 0, 3))
+                    until Dist <= 5
+                end
+
+                task.spawn(Respawn)
+                local Tool: Tool = plr.Backpack['Aerial Breaker']
+
+                Tool.Parent = char
+                Tool:Activate()
+                Tool:Deactivate()
+            else
+                fcts.Notif('Character not loaded!')
+            end
+        else
+            fcts.Notif("Target's character not found!")
+        end
+    else
+        fcts.Notif('Target not found!')
+    end
+end)
+
+local godStepped: RBXScriptConnection
+addNewCommand('Godmode', {'gm'}, 'God mode, earth only.', function(Args)
+    if not checkDim('Earth') then return end
+    Godmode = true
+
+    godStepped = RunService.Stepped:Connect(function()
+        if not Godmode then return end
+        local char, hrp, _ = fcts.isCharacterLoaded()
+
+        if char and hrp then
+            print('firetouch')
+            -- firetouchinterest(hrp, workspace.Touchy.Part, 0)
+            firetouchinterest(hrp, workspace.Touchy.Part, 1)
+
+            if gui:FindFirstChild('Popup') then gui.Popup:Destroy() end
+        else
+            return fcts.Notif('Character Not Found')
+        end
+    end)
+
+    fcts.Notif('Godmode Activated!')
+end)
+addNewCommand('UnGodmode', {'ungm'}, 'Stop Godmode', function(Args)
+    if not checkDim('Earth') then return end
+    Godmode = false
+    godStepped:Disconnect()
+
+    firetouchinterest(plr.Character.HumanoidRootPart, workspace.Touchy.Part, 0)
+    if gui:FindFirstChild('Popup') then gui.Popup:Destroy() end
+    fcts.Notif('Godmode DeActivated!')
+end)
+
+addNewCommand('Stats', {}, 'Shows you the stats of the said player. Used like: ' .. Prefix .. 'Stats [PartialName].', function(Args)
+    local target = fcts.getPlayer(Args)
+
+    local path = target.Character.Stats
+
+    print("------------------- " .. target.Name .. "'s stats: -------------------")
+    print('Health-Max : ' .. path['Health-Max'].Value)
+    print('Ki-Max : ' .. path['Ki-Max'].Value)
+    print('Phys-Damage : ' .. path['Phys-Damage'].Value)
+    print('Ki-Damage : ' .. path['Ki-Damage'].Value)
+    print('Phys-Resist : ' .. path['Phys-Resist'].Value)
+    print('Ki-Resist : ' .. path['Ki-Resist'].Value)
+    print('Speed : ' .. path.Speed.Value)
+    print('------------------------------------------------------------')
+
+    fcts.Notif("Press F9 to see " .. target.Name .. "'s stats!")
+end)
+
+addNewCommand('Freeze', {'Fr'}, 'Freezes the double exp timer, form level 150 needed and Flash Strike', function(Args)
+    local char, _ , _ = fcts.isCharacterLoaded()
+    local serverTraits = plr.Backpack.ServerTraits
+
+    serverTraits.Input:FireServer({[1] = 'x'}, CFrame.new(0, 0, 0), InputObject)
+    task.wait(3)
+    serverTraits.Transform:FireServer('g')
+    task.wait(.5)
+    serverTraits.Input:FireServer({[1] = 'xoff'}, CFrame.new(0, 0, 0), InputObject)
+    task.wait(.6)
+    local tool =  plr.Backpack['Flash Strike']
+
+    tool.Parent = char
+    serverTraits.Use:InvokeServer(char.Ki.Value - 15)
+
+    tool:Activate()
+    tool:Deactivate()
+end)
+
+
+
+
+-- Chat Handler --
+local lastMessage -- Event firing twice fix
+local conn = plr.Chatted:Connect(function(Message)
+    if lastMessage == Message then return end
+    lastMessage = Message
+    task.delay(.5, function() lastMessage = nil end)
+
+    Message = Message:lower()
+
+    if not Message:sub(1, 1):find(Prefix) then return end
+    Message = Message:gsub('*', '')
+
+    local chatCmd: string, Args: string? = unpack(Message:split(' '))
+    for cmd, v in Commands do
+
+        if cmd:lower() == chatCmd:lower() then
+            return v.Func(Args)
+        end
+
+        for _, alias in v.Aliases do
+            if alias:lower() == chatCmd:lower() then
+                return v.Func(Args)
+            end
+        end
+    end
+end)
+
+fcts.Notif('Type "' .. Prefix .. 'Cmds" to see the list of commands')
+repeat
+    task.wait()
+until exit
+conn:Disconnect()
+fcts.Notif('Lost Commands Successfulyl stopped')
